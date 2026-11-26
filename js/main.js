@@ -3,26 +3,26 @@ const sections = document.querySelectorAll(".section")
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
 if ("IntersectionObserver" in window && !prefersReducedMotion) {
-	document.documentElement.classList.add("js")
+    const observer = new IntersectionObserver(
+        entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("show")
+                    observer.unobserve(entry.target)
+                }
+            })
+        },
+        {
+            threshold: 0.1,
+        },
+    )
 
-	const observer = new IntersectionObserver(
-		entries => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add("show")
+    sections.forEach(section => {
+        observer.observe(section)
+    })
 
-					observer.unobserve(entry.target)
-				}
-			})
-		},
-		{
-			threshold: 0.1,
-		},
-	)
-
-	sections.forEach(section => {
-		observer.observe(section)
-	})
+    // Aktywujemy animacje dopiero po przygotowaniu obserwatora.
+    document.documentElement.classList.add("js")
 }
 
 const menuToggle = document.querySelector(".menu-toggle")
@@ -65,7 +65,7 @@ if (menuToggle && navigation) {
 		})
 	})
 
-	const desktopMedia = window.matchMedia("(min-width: 1151px)")
+	const desktopMedia = window.matchMedia("(min-width: 1251px)")
 
 	desktopMedia.addEventListener("change", event => {
 		if (event.matches) {
@@ -73,52 +73,6 @@ if (menuToggle && navigation) {
 		}
 	})
 }
-
-// const trainingCards = document.querySelectorAll(
-//     "#training .training-card"
-// );
-
-// const today = new Date().getDay();
-
-// const trainingDays = {
-//     1: "poniedziałek",
-//     3: "środa",
-//     5: "piątek"
-// };
-
-// trainingCards.forEach(card => {
-
-//     const heading = card.querySelector("h3");
-//     const toggle = card.querySelector(".training-toggle");
-
-//     // Pomijamy kartę, jeśli brakuje wymaganych elementów.
-//     if (!heading || !toggle) {
-//         return;
-//     }
-
-//     const dayName = heading.textContent.trim().toLowerCase();
-
-//     const isToday = trainingDays[today] === dayName;
-
-//     card.classList.toggle("is-open", isToday);
-
-//     toggle.setAttribute("aria-expanded", String(isToday));
-//     toggle.setAttribute(
-//         "aria-label",
-//         `${isToday ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`
-//     );
-
-//     toggle.addEventListener("click", () => {
-
-//         const isOpen = card.classList.toggle("is-open");
-
-//         toggle.setAttribute("aria-expanded", String(isOpen));
-//         toggle.setAttribute(
-//             "aria-label",
-//             `${isOpen ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`
-//         );
-//     });
-// });
 
 const trainingCards = document.querySelectorAll("#training .training-card")
 

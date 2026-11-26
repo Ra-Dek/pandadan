@@ -385,7 +385,19 @@ header {
     border-radius: var(--radius-large);
 }
 
+
 .hero-image img {
+    width: 100%;
+    aspect-ratio: var(--image-ratio-hero);
+    object-fit: cover;
+    border-radius: var(--radius-medium);
+
+    transition:
+        transform var(--transition-medium),
+        box-shadow var(--transition-medium);
+}
+
+/* .hero-image img {
     width: 100%;
     height: auto;
     border-radius: var(--radius-medium);
@@ -393,7 +405,7 @@ header {
     transition:
         transform var(--transition-medium),
         box-shadow var(--transition-medium);
-}
+} */
 
 .hero-buttons {
     display: flex;
@@ -1218,7 +1230,7 @@ header {
 
 @media (max-width: 1250px) {
     .logo img {
-        width: 90px;
+        width: 75px;
     }
 
     .header-container {
