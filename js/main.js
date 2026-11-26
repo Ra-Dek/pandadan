@@ -1,97 +1,78 @@
+const sections = document.querySelectorAll(".section")
 
-const sections = document.querySelectorAll(".section");
-
-const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-).matches;
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
 if ("IntersectionObserver" in window && !prefersReducedMotion) {
+	document.documentElement.classList.add("js")
 
-    document.documentElement.classList.add("js");
+	const observer = new IntersectionObserver(
+		entries => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add("show")
 
-    const observer = new IntersectionObserver(entries => {
+					observer.unobserve(entry.target)
+				}
+			})
+		},
+		{
+			threshold: 0.1,
+		},
+	)
 
-        entries.forEach(entry => {
-
-            if (entry.isIntersecting) {
-                entry.target.classList.add("show");
-
-                observer.unobserve(entry.target);
-            }
-        });
-
-    }, {
-        threshold: 0.1
-    });
-
-    sections.forEach(section => {
-        observer.observe(section);
-    });
+	sections.forEach(section => {
+		observer.observe(section)
+	})
 }
 
-
-const menuToggle = document.querySelector(".menu-toggle");
-const navigation = document.querySelector("#main-navigation");
+const menuToggle = document.querySelector(".menu-toggle")
+const navigation = document.querySelector("#main-navigation")
 
 if (menuToggle && navigation) {
+	const setMenuState = isOpen => {
+		navigation.classList.toggle("is-open", isOpen)
 
-    const setMenuState = isOpen => {
+		menuToggle.setAttribute("aria-expanded", String(isOpen))
+		menuToggle.setAttribute("aria-label", isOpen ? "Zamknij menu" : "Otwórz menu")
+	}
 
-        navigation.classList.toggle("is-open", isOpen);
+	menuToggle.addEventListener("click", () => {
+		const isOpen = !navigation.classList.contains("is-open")
 
-        menuToggle.setAttribute("aria-expanded", String(isOpen));
-        menuToggle.setAttribute(
-            "aria-label",
-            isOpen ? "Zamknij menu" : "Otwórz menu"
-        );
-    };
+		setMenuState(isOpen)
+	})
 
-    menuToggle.addEventListener("click", () => {
-        const isOpen = !navigation.classList.contains("is-open");
+	document.addEventListener("click", event => {
+		const clickedInsideMenu = navigation.contains(event.target)
+		const clickedToggle = menuToggle.contains(event.target)
+		const isOpen = navigation.classList.contains("is-open")
 
-        setMenuState(isOpen);
-    });
+		if (isOpen && !clickedInsideMenu && !clickedToggle) {
+			setMenuState(false)
+		}
+	})
 
-    document.addEventListener("click", event => {
+	document.addEventListener("keydown", event => {
+		if (event.key === "Escape" && navigation.classList.contains("is-open")) {
+			setMenuState(false)
+			menuToggle.focus()
+		}
+	})
 
-        const clickedInsideMenu = navigation.contains(event.target);
-        const clickedToggle = menuToggle.contains(event.target);
-        const isOpen = navigation.classList.contains("is-open");
+	navigation.querySelectorAll("a").forEach(link => {
+		link.addEventListener("click", () => {
+			setMenuState(false)
+		})
+	})
 
-        if (isOpen && !clickedInsideMenu && !clickedToggle) {
-            setMenuState(false);
-        }
-    });
+	const desktopMedia = window.matchMedia("(min-width: 1151px)")
 
-    document.addEventListener("keydown", event => {
-
-        if (
-            event.key === "Escape" &&
-            navigation.classList.contains("is-open")
-        ) {
-            setMenuState(false);
-            menuToggle.focus();
-        }
-    });
-
-    navigation.querySelectorAll("a").forEach(link => {
-
-        link.addEventListener("click", () => {
-            setMenuState(false);
-        });
-    });
-
-    const desktopMedia = window.matchMedia("(min-width: 1151px)");
-
-    desktopMedia.addEventListener("change", event => {
-
-        if (event.matches) {
-            setMenuState(false);
-        }
-    });
+	desktopMedia.addEventListener("change", event => {
+		if (event.matches) {
+			setMenuState(false)
+		}
+	})
 }
-
-
 
 // const trainingCards = document.querySelectorAll(
 //     "#training .training-card"
@@ -139,114 +120,90 @@ if (menuToggle && navigation) {
 //     });
 // });
 
-
-const trainingCards = document.querySelectorAll(
-    "#training .training-card"
-);
+const trainingCards = document.querySelectorAll("#training .training-card")
 
 trainingCards.forEach(card => {
+	const heading = card.querySelector("h3")
+	const toggle = card.querySelector(".training-toggle")
 
-    const heading = card.querySelector("h3");
-    const toggle = card.querySelector(".training-toggle");
+	// Pomijamy kartę, jeśli brakuje wymaganych elementów.
+	if (!heading || !toggle) {
+		return
+	}
 
-    // Pomijamy kartę, jeśli brakuje wymaganych elementów.
-    if (!heading || !toggle) {
-        return;
-    }
+	const dayName = heading.textContent.trim().toLowerCase()
 
-    const dayName = heading.textContent.trim().toLowerCase();
+	// Domyślnie rozwijamy wszystkie dni treningowe.
+	card.classList.add("is-open")
 
-    // Domyślnie rozwijamy wszystkie dni treningowe.
-    card.classList.add("is-open");
+	toggle.setAttribute("aria-expanded", "true")
+	toggle.setAttribute("aria-label", `Zwiń grafik: ${dayName}`)
 
-    toggle.setAttribute("aria-expanded", "true");
-    toggle.setAttribute(
-        "aria-label",
-        `Zwiń grafik: ${dayName}`
-    );
+	// Ręczne zwijanie i rozwijanie grafiku.
+	toggle.addEventListener("click", () => {
+		const isOpen = card.classList.toggle("is-open")
 
-    // Ręczne zwijanie i rozwijanie grafiku.
-    toggle.addEventListener("click", () => {
+		toggle.setAttribute("aria-expanded", String(isOpen))
+		toggle.setAttribute("aria-label", `${isOpen ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`)
+	})
+})
 
-        const isOpen = card.classList.toggle("is-open");
+const posterButtons = document.querySelectorAll(".event-poster")
+const lightbox = document.querySelector(".poster-lightbox")
 
-        toggle.setAttribute("aria-expanded", String(isOpen));
-        toggle.setAttribute(
-            "aria-label",
-            `${isOpen ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`
-        );
-    });
-});
+if (lightbox && typeof lightbox.showModal === "function") {
+	const lightboxImage = lightbox.querySelector("img")
+	const lightboxClose = lightbox.querySelector(".poster-lightbox-close")
 
+	if (lightboxImage && lightboxClose) {
+		posterButtons.forEach(button => {
+			const posterImage = button.querySelector("img")
 
-const posterButtons = document.querySelectorAll(".event-poster");
-const lightbox = document.querySelector(".poster-lightbox");
+			if (!posterImage) {
+				button.remove()
+				return
+			}
 
-if (
-    lightbox &&
-    typeof lightbox.showModal === "function"
-) {
+			const hidePoster = () => {
+				button.remove()
+			}
 
-    const lightboxImage = lightbox.querySelector("img");
-    const lightboxClose = lightbox.querySelector(
-        ".poster-lightbox-close"
-    );
+			posterImage.addEventListener("error", hidePoster)
 
-    if (lightboxImage && lightboxClose) {
+			if (posterImage.complete && posterImage.naturalWidth === 0) {
+				hidePoster()
+				return
+			}
 
-        posterButtons.forEach(button => {
+			// Otwieranie powiększenia po kliknięciu plakatu.
+			button.addEventListener("click", () => {
+				if (!posterImage.naturalWidth) {
+					return
+				}
 
-            const posterImage = button.querySelector("img");
+				lightboxImage.src = posterImage.currentSrc || posterImage.src
 
-            if (!posterImage) {
-                button.remove();
-                return;
-            }
+				lightboxImage.alt = posterImage.alt
 
-            const hidePoster = () => {
-                button.remove();
-            };
+				lightbox.showModal()
+			})
+		})
 
-            posterImage.addEventListener("error", hidePoster);
+		// Zamykanie przyciskiem.
+		lightboxClose.addEventListener("click", () => {
+			lightbox.close()
+		})
 
-            if (posterImage.complete && posterImage.naturalWidth === 0) {
-                hidePoster();
-                return;
-            }
+		// Zamykanie po kliknięciu tła dialogu.
+		lightbox.addEventListener("click", event => {
+			if (event.target === lightbox) {
+				lightbox.close()
+			}
+		})
 
-            // Otwieranie powiększenia po kliknięciu plakatu.
-            button.addEventListener("click", () => {
-
-                if (!posterImage.naturalWidth) {
-                    return;
-                }
-
-                lightboxImage.src =
-                    posterImage.currentSrc || posterImage.src;
-
-                lightboxImage.alt = posterImage.alt;
-
-                lightbox.showModal();
-            });
-        });
-
-        // Zamykanie przyciskiem.
-        lightboxClose.addEventListener("click", () => {
-            lightbox.close();
-        });
-
-        // Zamykanie po kliknięciu tła dialogu.
-        lightbox.addEventListener("click", event => {
-
-            if (event.target === lightbox) {
-                lightbox.close();
-            }
-        });
-
-        lightbox.addEventListener("close", () => {
-
-            lightboxImage.removeAttribute("src");
-            lightboxImage.alt = "";
-        });
-    }
+		lightbox.addEventListener("close", () => {
+			lightboxImage.removeAttribute("src")
+			lightboxImage.alt = ""
+		})
+	}
 }
