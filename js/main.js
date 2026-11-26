@@ -93,17 +93,56 @@ if (menuToggle && navigation) {
 
 
 
+// const trainingCards = document.querySelectorAll(
+//     "#training .training-card"
+// );
+
+// const today = new Date().getDay();
+
+// const trainingDays = {
+//     1: "poniedziałek",
+//     3: "środa",
+//     5: "piątek"
+// };
+
+// trainingCards.forEach(card => {
+
+//     const heading = card.querySelector("h3");
+//     const toggle = card.querySelector(".training-toggle");
+
+//     // Pomijamy kartę, jeśli brakuje wymaganych elementów.
+//     if (!heading || !toggle) {
+//         return;
+//     }
+
+//     const dayName = heading.textContent.trim().toLowerCase();
+
+//     const isToday = trainingDays[today] === dayName;
+
+//     card.classList.toggle("is-open", isToday);
+
+//     toggle.setAttribute("aria-expanded", String(isToday));
+//     toggle.setAttribute(
+//         "aria-label",
+//         `${isToday ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`
+//     );
+
+//     toggle.addEventListener("click", () => {
+
+//         const isOpen = card.classList.toggle("is-open");
+
+//         toggle.setAttribute("aria-expanded", String(isOpen));
+//         toggle.setAttribute(
+//             "aria-label",
+//             `${isOpen ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`
+//         );
+//     });
+// });
+
+
 const trainingCards = document.querySelectorAll(
     "#training .training-card"
 );
-
-const today = new Date().getDay();
-
-const trainingDays = {
-    1: "poniedziałek",
-    3: "środa",
-    5: "piątek"
-};
 
 trainingCards.forEach(card => {
 
@@ -117,16 +156,16 @@ trainingCards.forEach(card => {
 
     const dayName = heading.textContent.trim().toLowerCase();
 
-    const isToday = trainingDays[today] === dayName;
+    // Domyślnie rozwijamy wszystkie dni treningowe.
+    card.classList.add("is-open");
 
-    card.classList.toggle("is-open", isToday);
-
-    toggle.setAttribute("aria-expanded", String(isToday));
+    toggle.setAttribute("aria-expanded", "true");
     toggle.setAttribute(
         "aria-label",
-        `${isToday ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`
+        `Zwiń grafik: ${dayName}`
     );
 
+    // Ręczne zwijanie i rozwijanie grafiku.
     toggle.addEventListener("click", () => {
 
         const isOpen = card.classList.toggle("is-open");
@@ -138,7 +177,6 @@ trainingCards.forEach(card => {
         );
     });
 });
-
 
 
 const posterButtons = document.querySelectorAll(".event-poster");

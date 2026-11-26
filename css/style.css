@@ -555,7 +555,7 @@ header {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--spacing-lg);
-    align-items: stretch;
+    align-items: start;
 
     width: 100%;
 }
@@ -1314,6 +1314,10 @@ header {
     :root {
         --section-spacing: 60px;
         --outer-margin: 10px;
+    }
+
+    .logo img {
+    width: 70px;
     }
 
     .hero {
