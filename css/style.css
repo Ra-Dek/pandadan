@@ -1317,7 +1317,12 @@ header {
     }
 
     .logo img {
-    width: 70px;
+        width: 50px;
+    }
+
+    header {
+        position: static;
+        top: auto;
     }
 
     .hero {
