@@ -591,48 +591,9 @@ header {
     flex: 1;
 }
 
-.training-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-
-    width: 36px;
-    height: 36px;
-    padding: 0;
-
-    border: none;
-    border-radius: 50%;
-
-    background-color: var(--color-primary);
-    color: var(--color-white);
-
-    font-size: 1.5rem;
-    font-weight: var(--font-weight-bold);
-    line-height: 1;
-
-    cursor: pointer;
-
-    transition:
-        background-color var(--transition-fast),
-        transform var(--transition-fast);
-}
-
-.training-toggle::before {
-    content: "+";
-}
-
-.training-card.is-open .training-toggle::before {
-    content: "−";
-}
-
 .training-details {
-    display: none;
-    margin-top: var(--spacing-lg);
-}
-
-.training-card.is-open .training-details {
     display: block;
+    margin-top: var(--spacing-lg);
 }
 
 .training-details ul {
@@ -1191,11 +1152,6 @@ header {
             scale(var(--image-scale));
 
         box-shadow: var(--shadow-button);
-    }
-
-    .training-toggle:hover {
-        background-color: var(--color-primary-hover);
-        transform: scale(1.05);
     }
 
     .event-poster:hover img {

@@ -74,34 +74,6 @@ if (menuToggle && navigation) {
 	})
 }
 
-const trainingCards = document.querySelectorAll("#training .training-card")
-
-trainingCards.forEach(card => {
-	const heading = card.querySelector("h3")
-	const toggle = card.querySelector(".training-toggle")
-
-	// Pomijamy kartę, jeśli brakuje wymaganych elementów.
-	if (!heading || !toggle) {
-		return
-	}
-
-	const dayName = heading.textContent.trim().toLowerCase()
-
-	// Domyślnie rozwijamy wszystkie dni treningowe.
-	card.classList.add("is-open")
-
-	toggle.setAttribute("aria-expanded", "true")
-	toggle.setAttribute("aria-label", `Zwiń grafik: ${dayName}`)
-
-	// Ręczne zwijanie i rozwijanie grafiku.
-	toggle.addEventListener("click", () => {
-		const isOpen = card.classList.toggle("is-open")
-
-		toggle.setAttribute("aria-expanded", String(isOpen))
-		toggle.setAttribute("aria-label", `${isOpen ? "Zwiń" : "Rozwiń"} grafik: ${dayName}`)
-	})
-})
-
 const posterButtons = document.querySelectorAll(".event-poster")
 const lightbox = document.querySelector(".poster-lightbox")
 
